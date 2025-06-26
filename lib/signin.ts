@@ -1,29 +1,19 @@
 import { createClient } from "./supabase/client";
 
 
-function generateRandomUsername() {
-    const adjectives = [
-        "Fast", "Smart", "Happy", "Sneaky", "Loud", "Epic", "Brave", "Zany", "Quick", "Chill"
-    ];
-    const nouns = [
-        "Tiger", "Wizard", "Banana", "Genius", "Sloth", "Penguin", "Ninja", "Panda", "Otter", "Cactus"
-    ];
+function generateRandomNumber() {
     const number = Math.floor(Math.random() * 900 + 100);
-
-    const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-    const noun = nouns[Math.floor(Math.random() * nouns.length)];
-
-    return `${adjective}${noun}${number}`;
+    return `${number}`;
 }
 
 
-export default async function SignIn() {
+export default async function SignIn(name: string) {
     const supabase = createClient()
 
     await supabase.auth.signInAnonymously({
         options: {
             data: {
-                name: generateRandomUsername(),
+                name: name + generateRandomNumber(),
             }
         }
     })

@@ -6,10 +6,12 @@ import SignIn from "@/lib/signin";
 import getUser from "@/hooks/getUser";
 import Loading from "@/components/Loading";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
 
 declare global {
   interface Window {
     VANTA?: any;
+    THREE?: any;
   }
 }
 
@@ -20,18 +22,25 @@ export default function Home() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const threeLoaded = useRef(false);
+  const vantaLoaded = useRef(false);
 
   useEffect(() => {
     async function fetchUser() {
-       const userData = await getUser();
+      const userData = await getUser();
       setUser(userData);
       setLoading(false);
     }
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.VANTA && window.VANTA.NET && vantaRef.current) {
+  function handleVantaLoad() {
+    if (
+      typeof window !== "undefined" &&
+      window.VANTA &&
+      window.VANTA.NET &&
+      vantaRef.current
+    ) {
       vantaInstance.current = window.VANTA.NET({
         el: vantaRef.current,
         mouseControls: true,
@@ -47,6 +56,34 @@ export default function Home() {
         spacing: 18,
       });
     }
+  }
+
+  function tryInitVanta() {
+    if (
+      typeof window !== "undefined" &&
+      window.VANTA &&
+      window.VANTA.NET &&
+      window.THREE &&
+      vantaRef.current
+    ) {
+      vantaInstance.current = window.VANTA.NET({
+        el: vantaRef.current,
+        mouseControls: true,
+        touchControls: true,
+        minHeight: 200.0,
+        minWidth: 200.0,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        backgroundColor: 0x0a0a0a,
+        color: 0xff8800,
+        points: 12,
+        maxDistance: 22,
+        spacing: 18,
+      });
+    }
+  }
+
+  useEffect(() => {
     return () => {
       if (vantaInstance.current) {
         vantaInstance.current.destroy();
@@ -66,17 +103,34 @@ export default function Home() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center relative">
-      <Script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" strategy="beforeInteractive" />
-      <Script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.net.min.js" strategy="beforeInteractive" />
-      <div ref={vantaRef} className="absolute inset-0 w-full h-full -z-10 pointer-events-none" />
+      <Script
+        src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"
+        strategy="afterInteractive"
+        onLoad={() => {
+          threeLoaded.current = true;
+          tryInitVanta();
+        }}
+      />
+      <Script
+        src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.net.min.js"
+        strategy="afterInteractive"
+        onLoad={() => {
+          vantaLoaded.current = true;
+          tryInitVanta();
+        }}
+      />
+      <div
+        ref={vantaRef}
+        className="absolute inset-0 w-full h-full -z-10 pointer-events-none"
+      />
       <h1 className="text-4xl font-bold mt-10 mb-6 z-10 relative">Hello!</h1>
-      <input
+      <Input
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        onKeyDown={async(e) => {
+        onKeyDown={async (e) => {
           if (e.key === "Enter" && name.trim().length > 0) {
-            await SignIn();
+            await SignIn(name.trim());
           }
         }}
         placeholder="Type your name..."
