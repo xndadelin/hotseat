@@ -5,7 +5,6 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -14,6 +13,8 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState } from 'react'
+import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
 
 export const CreateGameModal = () => {
     const [gameName, setNameGame] = useState<string>("");
@@ -21,17 +22,44 @@ export const CreateGameModal = () => {
     const [userCount, setUserCount] = useState<number>(1);
     const [questionCount, setQuestionCount] = useState<number>(1)
     const [time, setTime] = useState<number>(1);
+    const router = useRouter();
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const supabase = createClient();
+        const { data: userData } = await supabase.auth.getUser();
+        const userId = userData?.user?.id;
+        if (!userId) {
+            alert('you must be logged in to create a game.');
+            return;
+        }
+        const { data, error } = await supabase.from('games').insert([
+            {
+                name: gameName,
+                password: gamePassword ? gamePassword : null,
+                user_count: userCount,
+                question_count: questionCount,
+                time_minutes: time,
+                created_by: userId,
+            }
+        ]).select('id');
+        if (error) {
+            alert('error creating game: ' + error.message);
+        } else if (data && data[0]?.id) {
+            router.push(`/play/${data[0].id}`);
+        }
+    }
 
     return (
         <Dialog>
-            <form>
-                <DialogTrigger asChild>
-                    <Button variant="outline" className='w-full px-6 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition-colors text-xl font-bold'>Create game</Button>
-                </DialogTrigger>
-                <DialogContent className='sm:max-w-[425px]'>
-                    <DialogHeader>
-                        <DialogTitle>Create a new game</DialogTitle>
-                    </DialogHeader>
+            <DialogTrigger asChild>
+                <Button variant="outline" className="bg-green-600 text-white hover:bg-green-700">Create game</Button>
+            </DialogTrigger>
+            <DialogContent className='sm:max-w-[425px]'>
+                <DialogHeader>
+                    <DialogTitle>Create a new game</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSubmit}>
                     <div className='grid gap-4 grid-cols-2'>
                         <div className='flex flex-col gap-2'>
                             <Label htmlFor='gameName'>Game name</Label>
@@ -90,12 +118,14 @@ export const CreateGameModal = () => {
                     </div>
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button variant={"outline"}>Cancel</Button>
+                            <Button variant="outline" type="button">Cancel</Button>
                         </DialogClose>
-                        <Button type="submit">Submit</Button>
+                        <Button type="submit">
+                            Submit
+                        </Button>
                     </DialogFooter>
-                </DialogContent>
-            </form>
+                </form>
+            </DialogContent>
         </Dialog>
     )
 }

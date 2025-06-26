@@ -64,6 +64,7 @@ export default function Home() {
       window.VANTA &&
       window.VANTA.NET &&
       window.THREE &&
+      window.THREE.Group &&
       vantaRef.current
     ) {
       vantaInstance.current = window.VANTA.NET({
@@ -80,6 +81,12 @@ export default function Home() {
         maxDistance: 22,
         spacing: 18,
       });
+    } else {
+      // Ensure window.THREE is set if available
+      if (typeof window !== 'undefined' && window['THREE'] && !window.THREE) {
+        window.THREE = window['THREE'];
+      }
+      console.log('VANTA or THREE not ready', { VANTA: window.VANTA, THREE: window.THREE });
     }
   }
 
@@ -107,6 +114,9 @@ export default function Home() {
         src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"
         strategy="afterInteractive"
         onLoad={() => {
+          if (typeof window !== 'undefined' && window['THREE']) {
+            window.THREE = window['THREE'];
+          }
           threeLoaded.current = true;
           tryInitVanta();
         }}

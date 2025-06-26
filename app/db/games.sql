@@ -1,4 +1,4 @@
-create tables games (
+create table games (
     id uuid primary key default gen_random_uuid(),
     name text not null, 
     password text,
@@ -7,18 +7,19 @@ create tables games (
     time_minutes integer not null default 10, 
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now(),
-    created_by uuid not null references users(id) on delete cascade,
+    created_by uuid not null,
     game_state jsonb not null default '{}'::jsonb,
     game_type text not null default 'hotseat',
     game_mode text not null default 'standard',
-    game_status text not null default 'waiting',
+    game_status text not null default 'waiting'
 );
 
 alter table games enable row level security;
+
 create policy "allow authenticated users to insert games"
     on games
     for insert
-    using (auth.uid() is not null);
+    with check (auth.uid() is not null);
 
 create policy "allow authenticated users to select games"
     on games
@@ -33,5 +34,4 @@ create policy "allow authenticated users to update their own games"
 create policy "allow authenticated users to delete their own games"
     on games
     for delete
-    using (auth.uid() = created_by);    
-
+    using (auth.uid() = created_by);
