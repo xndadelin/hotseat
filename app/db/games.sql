@@ -12,6 +12,7 @@ create table games (
     game_type text not null default 'hotseat',
     game_mode text not null default 'standard',
     game_status text not null default 'waiting'
+    participants jsonb not null default '[]'::jsonb
 );
 
 alter table games enable row level security;
