@@ -1,20 +1,20 @@
 "use client";
 
-  import { useEffect, useState } from "react";
-  import SignIn from "@/lib/signin";
-  import getUser from "@/hooks/getUser";
-  import Loading from "@/components/Loading";
-  import { useRouter } from "next/navigation";
-  import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react";
+import SignIn from "@/lib/signin";
+import getUser from "@/hooks/getUser";
+import Loading from "@/components/Loading";
+import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
 
-  declare global {
-    interface Window {
-      VANTA?: any;
-      THREE?: any;
-    }
+declare global {
+  interface Window {
+    VANTA?: any;
+    THREE?: any;
   }
+}
 
-  const hc_links = `
+const hc_links = `
           https://hackclub.com/stickers/macintosh.svg
           https://hackclub.com/stickers/2020_progress.png
           https://hackclub.com/stickers/enjoy.svg
@@ -117,52 +117,55 @@
           https://hackclub.com/stickers/valorant_vertical.svg
           https://hackclub.com/stickers/zephyr.svg`.split("\n").map(s => s.trim()).filter(Boolean);
 
-  const randomSticker = hc_links[Math.floor(Math.random() * hc_links.length)];
+const randomSticker = hc_links[Math.floor(Math.random() * hc_links.length)];
 
-  export default function Home() {
-    const [name, setName] = useState("");
-    const [user, setUser] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
+export default function Home() {
+  const [name, setName] = useState("");
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [signingIn, setSigningIn] = useState(false);
+  const router = useRouter();
 
-    useEffect(() => {
-      async function fetchUser() {
-        const userData = await getUser();
-        setUser(userData);
-        setLoading(false);
-      }
-      fetchUser();
-    }, []);
+  useEffect(() => {
+    async function fetchUser() {
+      const userData = await getUser();
+      setUser(userData);
+      setLoading(false);
+    }
+    fetchUser();
+  }, []);
 
-    useEffect(() => {
-      if (!loading && user) {
-        router.replace("/play");
-      }
-    }, [loading, user, router]);
+  useEffect(() => {
+    if (!loading && user) {
+      router.replace("/play");
+    }
+  }, [loading, user, router]);
 
-    if (loading) return <Loading />;
-    if (user) return null;
+  if (loading || signingIn) return <Loading />;
+  if (user) return <Loading />;
 
-    return (
-      <main className="min-h-screen flex flex-col items-center justify-center relative">
-        <img src={randomSticker} alt="Hack Club Sticker" className="w-32 h-32 object-contain z-10 relative" />
-        <h1 className="text-4xl font-bold mt-10 mb-6 z-10 relative">Hello!</h1>
-        <Input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          onKeyDown={async (e) => {
-            if (e.key === "Enter" && name.trim().length > 0) {
-              await SignIn(name.trim());
-            }
-          }}
-          placeholder="Type your name..."
-          autoFocus
-          autoComplete="off"
-          spellCheck="false"
-          required
-          className="w-64 text-lg bg-white dark:bg-zinc-900 border border-orange-500 shadow-lg placeholder-orange-400 focus:border-orange-600 focus:ring-2 focus:ring-orange-300 z-10 relative"
-        />
-      </main>
-    );
-  }
+  return (
+    <main className="min-h-screen flex flex-col items-center justify-center relative">
+      <img src={randomSticker} alt="Hack Club Sticker" className="w-32 h-32 object-contain z-10 relative" />
+      <h1 className="text-4xl font-bold mt-10 mb-6 z-10 relative">Hello!</h1>
+      <Input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        onKeyDown={async (e) => {
+          if (e.key === "Enter" && name.trim().length > 0) {
+            setSigningIn(true);
+            await SignIn(name.trim());
+            setSigningIn(false);
+          }
+        }}
+        placeholder="Type your name..."
+        autoFocus
+        autoComplete="off"
+        spellCheck="false"
+        required
+        className="w-64 text-lg bg-white dark:bg-zinc-900 border border-zinc-700 shadow-lg placeholder-zinc-400 focus:border-zinc-600 focus:ring-2 focus:ring-zinc-300 z-10 relative"
+      />
+    </main>
+  );
+}

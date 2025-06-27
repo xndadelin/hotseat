@@ -26,10 +26,11 @@ import {
 export const CreateGameModal = () => {
     const [gameName, setNameGame] = useState<string>("");
     const [gamePassword, setGamePassword] = useState<string>("");
-    const [userCount, setUserCount] = useState<number>(1);
     const [questionCount, setQuestionCount] = useState<number>(1)
-    const [time, setTime] = useState<number>(1);
+    const [timePerQuestion, setTimePerQuestion] = useState<number>(10);
     const [category, setCategory] = useState<string>("");
+    const [loading, setLoading] = useState(false);
+    const [formError, setFormError] = useState<string | null>(null);
     const router = useRouter();
 
     const categories = [
@@ -50,38 +51,46 @@ export const CreateGameModal = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setFormError(null);
+        if (!gameName.trim() || !category || !questionCount || !timePerQuestion) {
+            setFormError('All fields are required.');
+            setLoading(false);
+            return;
+        }
+        setLoading(true);
         const supabase = createClient();
         const { data: userData } = await supabase.auth.getUser();
         const userId = userData?.user?.id;
         const userName = userData?.user?.user_metadata?.name
         if (!userId) {
-            alert('you must be logged in to create a game.');
+            setFormError('You must be logged in to create a game.');
+            setLoading(false);
             return;
         }
         const { data, error } = await supabase.from('games').insert([
             {
                 name: gameName,
                 password: gamePassword ? gamePassword : null,
-                user_count: userCount,
                 question_count: questionCount,
-                time_minutes: time,
+                time_minutes: timePerQuestion,
                 created_by: userId,
                 participants: [{ id: userId, name: userName }],
                 category: category,
             }
         ]).select('id');
         if (error) {
-            alert('error creating game: ' + error.message);
+            setFormError('Error creating game: ' + error.message);
         } else if (data && data[0]?.id) {
             router.push(`/play/${data[0].id}`);
         }
+        setLoading(false);
     }
 
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <Button className="w-full bg-black dark:bg-white text-white dark:text-black py-2.5 rounded-md font-medium hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">
-                    Create Game
+                    Create game
                 </Button>
             </DialogTrigger>
             <DialogContent className='max-w-md'>
@@ -89,9 +98,10 @@ export const CreateGameModal = () => {
                     <DialogTitle className="text-xl font-semibold">Create Game</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
+                    {formError && <div className="text-red-500 text-sm text-center">{formError}</div>}
                     <div className="space-y-4">
                         <div>
-                            <Label htmlFor='gameName' className="text-sm font-medium">Game Name</Label>
+                            <Label htmlFor='gameName' className="text-sm font-medium">Game name</Label>
                             <Input
                                 id="gameName"
                                 placeholder="Enter game name"
@@ -115,17 +125,6 @@ export const CreateGameModal = () => {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <Label htmlFor='userCount' className="text-sm font-medium">Players</Label>
-                                <Input
-                                    id="userCount"
-                                    type="number"
-                                    min={1}
-                                    placeholder="10"
-                                    onChange={(e) => setUserCount(Number(e.target.value))}
-                                    className="mt-1"
-                                />
-                            </div>
-                            <div>
                                 <Label htmlFor='questionCount' className="text-sm font-medium">Questions</Label>
                                 <Input
                                     id="questionCount"
@@ -136,20 +135,21 @@ export const CreateGameModal = () => {
                                     className="mt-1"
                                 />
                             </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <Label htmlFor='time' className="text-sm font-medium">Time (min)</Label>
+                                <Label htmlFor='timePerQuestion' className="text-sm font-medium">Time per question (sec)</Label>
                                 <Input
-                                    id="time"
+                                    id="timePerQuestion"
                                     type="number"
                                     min={1}
-                                    placeholder="2"
-                                    onChange={(e) => setTime(Number(e.target.value))}
+                                    placeholder="10"
+                                    value={timePerQuestion}
+                                    onChange={(e) => setTimePerQuestion(Number(e.target.value))}
                                     className="mt-1"
                                 />
                             </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <Label htmlFor='category' className="text-sm font-medium">Category</Label>
                                 <Select value={category} onValueChange={setCategory} required>
@@ -172,8 +172,8 @@ export const CreateGameModal = () => {
                                 Cancel
                             </Button>
                         </DialogClose>
-                        <Button type="submit" className="flex-1 bg-black dark:bg-white text-white dark:text-black font-medium hover:bg-gray-800 dark:hover:bg-gray-100">
-                            Create
+                        <Button type="submit" className="flex-1 bg-black dark:bg-white text-white dark:text-black font-medium hover:bg-gray-800 dark:hover:bg-gray-100" disabled={loading}>
+                            {loading ? 'Creating...' : 'Create'}
                         </Button>
                     </DialogFooter>
                 </form>

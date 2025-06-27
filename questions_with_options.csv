@@ -1,0 +1,101 @@
+category,question,option1,option2,option3,option4,answer
+General,What is the capital of France?,Paris,Lyon,Marseille,Nice,Paris
+General,What is the largest planet in our solar system?,Jupiter,Saturn,Neptune,Earth,Jupiter
+General,Who wrote 'To Kill a Mockingbird'?,Harper Lee,Mark Twain,Jane Austen,Ernest Hemingway,Harper Lee
+General,What is the boiling point of water in Celsius?,100,90,80,120,100
+General,What is the main ingredient in guacamole?,Avocado,Tomato,Onion,Peas,Avocado
+General,What year did World War II end?,1945,1944,1939,1950,1945
+General,What is the chemical symbol for gold?,Au,Ag,Fe,Cu,Au
+General,Who painted the Mona Lisa?,Leonardo da Vinci,Michelangelo,Raphael,Donatello,Leonardo da Vinci
+General,What is the hardest natural substance?,Diamond,Quartz,Gold,Iron,Diamond
+General,What is the largest mammal?,Blue Whale,Elephant,Hippopotamus,Orca,Blue Whale
+General,What is the smallest prime number?,2,1,3,5,2
+General,What is the currency of Japan?,Yen,Won,Yuan,Renminbi,Yen
+General,Who discovered penicillin?,Alexander Fleming,Louis Pasteur,Marie Curie,Isaac Newton,Alexander Fleming
+General,What is the tallest mountain in the world?,Mount Everest,K2,Kangchenjunga,Mont Blanc,Mount Everest
+General,What is the main language spoken in Brazil?,Portuguese,Spanish,French,Italian,Portuguese
+General,What is the square root of 64?,8,6,7,9,8
+General,What is the capital of Canada?,Ottawa,Toronto,Montreal,Vancouver,Ottawa
+General,Who is known as the father of computers?,Charles Babbage,Alan Turing,John von Neumann,Bill Gates,Charles Babbage
+General,What is the largest ocean on Earth?,Pacific Ocean,Atlantic Ocean,Indian Ocean,Arctic Ocean,Pacific Ocean
+General,What is the freezing point of water in Fahrenheit?,32,0,100,212,32
+General,What is the main gas in the Earth's atmosphere?,Nitrogen,Oxygen,Carbon Dioxide,Argon,Nitrogen
+General,Who invented the telephone?,Alexander Graham Bell,Thomas Edison,Nikola Tesla,Samuel Morse,Alexander Graham Bell
+General,What is the longest river in the world?,Nile,Amazon,Mississippi,Yangtze,Nile
+General,What is the capital of Italy?,Rome,Milan,Venice,Florence,Rome
+General,What is the chemical symbol for oxygen?,O,H2,O2,CO2,O
+Science,What is the powerhouse of the cell?,Mitochondria,Nucleus,Ribosome,Chloroplast,Mitochondria
+Science,What planet is known as the Red Planet?,Mars,Jupiter,Venus,Saturn,Mars
+Science,What is H2O more commonly known as?,Water,Hydrogen,Peroxide,Oxygen,Water
+Science,What is the speed of light in vacuum (m/s)?,299792458,150000000,300000,186000,299792458
+Science,What is the process by which plants make food?,Photosynthesis,Respiration,Transpiration,Fermentation,Photosynthesis
+Science,What is the center of an atom called?,Nucleus,Proton,Electron,Neutron,Nucleus
+Science,What is the chemical symbol for sodium?,Na,K,Cl,Si,Na
+Science,What is the largest organ in the human body?,Skin,Liver,Heart,Brain,Skin
+Science,What is the study of living organisms called?,Biology,Zoology,Ecology,Geology,Biology
+Science,What is the most abundant gas in Earth's atmosphere?,Nitrogen,Oxygen,Carbon Dioxide,Hydrogen,Nitrogen
+Science,What is the basic unit of life?,Cell,Atom,Tissue,Organ,Cell
+Science,What is the boiling point of water in Fahrenheit?,212,100,180,32,212
+Science,What is the hardest known natural material?,Diamond,Quartz,Graphite,Steel,Diamond
+Science,What is the main function of red blood cells?,Carry oxygen,Carry nutrients,Defend against infection,Clot blood,Carry oxygen
+Science,What is the chemical formula for table salt?,NaCl,KCl,Na2CO3,CaCl2,NaCl
+Science,What is the nearest star to Earth?,Sun,Alpha Centauri,Proxima Centauri,Sirius,Sun
+Science,What is the largest bone in the human body?,Femur,Tibia,Humerus,Skull,Femur
+Science,What is the process of liquid turning into gas called?,Evaporation,Condensation,Precipitation,Melting,Evaporation
+Science,What is the study of the universe called?,Astronomy,Astrology,Geology,Physics,Astronomy
+Science,What is the pH value of pure water?,7,6,8,5,7
+Science,What is the chemical symbol for iron?,Fe,Ir,In,F,Fe
+Science,What is the force that keeps us on the ground?,Gravity,Magnetism,Friction,Inertia,Gravity
+Science,What is the main gas plants absorb from the air?,Carbon dioxide,Oxygen,Nitrogen,Hydrogen,Carbon dioxide
+Science,What is the chemical symbol for potassium?,K,P,Pt,Po,K
+Science,What is the process by which a caterpillar becomes a butterfly?,Metamorphosis,Photosynthesis,Respiration,Pollination,Metamorphosis
+Math,What is 2 + 2?,4,3,5,6,4
+Math,What is the square root of 16?,4,2,8,6,4
+Math,What is 10 x 10?,100,10,1000,110,100
+Math,What is 100 divided by 4?,25,20,50,40,25
+Math,What is the value of pi (to 2 decimal places)?,3.14,3.15,3.13,3.12,3.14
+Math,What is 7 x 8?,56,54,64,48,56
+Math,What is 12 / 3?,4,3,6,5,4
+Math,What is 9 - 5?,4,3,5,6,4
+Math,What is 6 + 7?,13,12,14,15,13
+Math,What is 15 - 7?,8,7,9,6,8
+Math,What is 8 x 7?,56,54,64,48,56
+Math,What is 49 / 7?,7,6,8,9,7
+Math,What is 5 x 5?,25,20,15,30,25
+Math,What is 81 / 9?,9,8,7,10,9
+Math,What is 11 + 11?,22,21,20,23,22
+Math,What is 13 - 6?,7,6,8,9,7
+Math,What is 14 x 2?,28,24,26,30,28
+Math,What is 100 / 5?,20,25,15,10,20
+Math,What is 25 + 25?,50,40,45,55,50
+Math,What is 36 / 6?,6,5,7,8,6
+Math,What is 18 - 9?,9,8,10,7,9
+Math,What is 7 x 7?,49,42,56,63,49
+Math,What is 64 / 8?,8,7,6,9,8
+Math,What is 20 + 5?,25,20,30,15,25
+Math,What is 30 - 10?,20,10,30,40,20
+Programming,What does HTML stand for?,HyperText Markup Language,Home Tool Markup Language,Hyperlinks and Text Markup Language,HyperText Markdown Language,HyperText Markup Language
+Programming,What does CSS stand for?,Cascading Style Sheets,Computer Style Sheets,Creative Style Sheets,Colorful Style Sheets,Cascading Style Sheets
+Programming,What does JS stand for?,JavaScript,JavaSource,JustScript,JavaSyntax,JavaScript
+Programming,What is the main language for Android development?,Java,Kotlin,Swift,Python,Java
+Programming,What is the main language for iOS development?,Swift,Objective-C,Java,Kotlin,Swift
+Programming,What is the main language for web development?,JavaScript,HTML,CSS,Python,JavaScript
+Programming,What is the main language for backend development?,Python,Java,PHP,JavaScript,Python
+Programming,What is the main language for frontend development?,JavaScript,HTML,CSS,TypeScript,JavaScript
+Programming,What is the main language for data science?,Python,R,Java,Julia,Python
+Programming,What is the main language for machine learning?,Python,R,Java,C++,Python
+Programming,What is the main language for artificial intelligence?,Python,Java,C++,Lisp,Python
+Programming,What is the main language for game development?,C#,C++,Java,Python,C#
+Programming,What is the main language for embedded systems?,C,C++,Assembly,Python,C
+Programming,What is the main language for scripting?,Python,Bash,Perl,Ruby,Python
+Programming,What is the main language for database management?,SQL,MySQL,PostgreSQL,MongoDB,SQL
+Programming,What is the main language for cloud computing?,Python,Java,Go,Node.js,Python
+Programming,What is the main language for DevOps?,Python,Bash,Go,Ruby,Python
+Programming,What is the main language for cybersecurity?,Python,C,C++,Java,Python
+Programming,What is the main language for networking?,Python,C,Java,Go,Python
+Programming,What is the main language for automation?,Python,Bash,JavaScript,Go,Python
+Programming,What is the main language for robotics?,Python,C++,Java,ROS,Python
+Programming,What is the main language for IoT?,Python,C,Java,Node.js,Python
+Programming,What is the main language for blockchain?,Solidity,Python,JavaScript,Go,Solidity
+Programming,What is the main language for VR?,C#,C++,Java,Python,C#
+Programming,What is the main language for AR?,C#,C++,Java,Python,C#

@@ -1,38 +1,43 @@
-create table games (
-    id uuid primary key default gen_random_uuid(),
-    name text not null, 
+CREATE TABLE games (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    name text NOT NULL,
     password text,
-    user_count integer not null default 1,
-    question_count integer not null default 10, 
-    time_minutes integer not null default 10, 
-    created_at timestamptz not null default now(),
-    updated_at timestamptz not null default now(),
-    created_by uuid not null,
-    game_state jsonb not null default '{}'::jsonb,
-    game_type text not null default 'hotseat',
-    game_mode text not null default 'standard',
-    game_status text not null default 'waiting'
-    participants jsonb not null default '[]'::jsonb
+    question_count integer NOT NULL,
+    time_minutes integer NOT NULL,
+    created_by uuid NOT NULL,
+    participants jsonb DEFAULT '[]',
+    category text NOT NULL,
+    game_status text DEFAULT 'pending',
+    current_question integer DEFAULT 0,
+    phase text DEFAULT 'lobby', -- 'lobby', 'question', 'results', 'finished'
+    created_at timestamptz DEFAULT now()
 );
 
-alter table games enable row level security;
+CREATE TABLE questions (
+    id serial PRIMARY KEY,
+    category text NOT NULL,
+    question text NOT NULL,
+    correct_answer text NOT NULL,
+    option_1 text NOT NULL,
+    option_2 text NOT NULL,
+    option_3 text NOT NULL
+);
 
-create policy "allow authenticated users to insert games"
-    on games
-    for insert
-    with check (auth.uid() is not null);
+CREATE TABLE answers (
+    id serial PRIMARY KEY,
+    game_id uuid REFERENCES games(id) ON DELETE CASCADE,
+    user_id uuid NOT NULL,
+    question_index integer NOT NULL,
+    answer text NOT NULL,
+    answered_at timestamptz DEFAULT now()
+);
 
-create policy "allow authenticated users to select games"
-    on games
-    for select
-    using (auth.uid() is not null);
+CREATE TABLE scores (
+    id serial PRIMARY KEY,
+    game_id uuid REFERENCES games(id) ON DELETE CASCADE,
+    user_id uuid NOT NULL,
+    score integer DEFAULT 0
+);
 
-create policy "allow authenticated users to update their own games"
-    on games
-    for update
-    using (auth.uid() = created_by);
-
-create policy "allow authenticated users to delete their own games"
-    on games
-    for delete
-    using (auth.uid() = created_by);
+CREATE INDEX idx_answers_game ON answers(game_id);
+CREATE INDEX idx_answers_user ON answers(user_id);

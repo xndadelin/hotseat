@@ -123,6 +123,9 @@ export default function PlayPage() {
     const [joinPassword, setJoinPassword] = useState("");
     const [joinError, setJoinError] = useState<string | null>(null);
     const [joinLoading, setJoinLoading] = useState(false);
+    const [games, setGames] = useState<any[]>([]);
+    const [gamesLoading, setGamesLoading] = useState(true);
+    const [gamesError, setGamesError] = useState<string | null>(null);
     const router = useRouter();
 
     useEffect(() => {
@@ -133,6 +136,27 @@ export default function PlayPage() {
             setLoading(false);
         }
         fetchUser();
+    }, []);
+
+    useEffect(() => {
+        async function fetchGames() {
+            setGamesLoading(true);
+            setGamesError(null);
+            try {
+                const supabase = (await import("@/lib/supabase/client")).createClient();
+                const { data, error } = await supabase
+                    .from("games")
+                    .select("id, name, game_status, participants")
+                    .in("game_status", ["pending", "started"])
+                    .order("created_at", { ascending: false });
+                if (error) setGamesError(error.message);
+                else setGames(data || []);
+            } catch (err) {
+                setGamesError("Failed to load games.");
+            }
+            setGamesLoading(false);
+        }
+        fetchGames();
     }, []);
 
     if (loading) return <Loading />;
@@ -189,7 +213,6 @@ export default function PlayPage() {
         }
         setJoinLoading(false);
     }
-
     return (
         <main className="min-h-screen flex flex-col items-center justify-center px-4">
             <div className="w-full max-w-sm space-y-8">
@@ -204,9 +227,37 @@ export default function PlayPage() {
                     </h1>
                 </div>
 
+                <div className="space-y-4">
+                    <h2 className="text-lg font-medium text-gray-800 dark:text-white text-center">Available games</h2>
+                    {gamesLoading ? (
+                        <div className="text-center text-gray-500">Loading games...</div>
+                    ) : gamesError ? (
+                        <div className="text-center text-red-500">{gamesError}</div>
+                    ) : games.length === 0 ? (
+                        <div className="text-center text-gray-500">No games available.</div>
+                    ) : (
+                        <ul className="divide-y divide-zinc-800 rounded-lg border border-zinc-800 bg-zinc-900 overflow-hidden mt-4 mb-4">
+                            {games.slice(0, 8).map(g => (
+                                <li key={g.id} className="flex items-center justify-between px-3 py-3">
+                                    <div>
+                                        <div className="font-medium text-white truncate max-w-[10rem]">{g.name || g.id}</div>
+                                        <div className="text-xs text-zinc-400">{g.game_status} • {(Array.isArray(g.participants) ? g.participants.length : 0)} players</div>
+                                    </div>
+                                    <button
+                                        className="ml-2 px-3 py-1 rounded bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-colors whitespace-nowrap"
+                                        onClick={() => setJoinGameId(g.id)}
+                                    >Join game</button>
+                                </li>
+                            ))}
+                            {games.length > 8 && (
+                                <li className="text-xs text-center text-zinc-500 py-2">...and {games.length - 8} more</li>
+                            )}
+                        </ul>
+                    )}
+                </div>
+
                 <div className="space-y-6">
                     <CreateGameModal />
-                    
                     <div className="relative">
                         <div className="absolute inset-0 flex items-center">
                             <div className="w-full border-t border-gray-200 dark:border-gray-700" />
@@ -215,7 +266,6 @@ export default function PlayPage() {
                             <span className="bg-white dark:bg-gray-900 px-2 text-gray-500">or</span>
                         </div>
                     </div>
-
                     <form onSubmit={handleJoinGame} className="space-y-4">
                         <ShadcnInput
                             type="text"
@@ -238,7 +288,7 @@ export default function PlayPage() {
                             disabled={joinLoading}
                             className="w-full bg-black dark:bg-white text-white dark:text-black py-2.5 rounded-md font-medium hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {joinLoading ? "Joining..." : "Join Game"}
+                            {joinLoading ? "Joining..." : "Join game"}
                         </button>
                         {joinError && (
                             <p className="text-red-500 text-sm text-center">{joinError}</p>
@@ -246,7 +296,6 @@ export default function PlayPage() {
                     </form>
                 </div>
             </div>
-
             <button
                 onClick={handleLogout}
                 className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-sm font-medium"
